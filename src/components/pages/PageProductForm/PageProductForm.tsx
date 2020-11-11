@@ -50,8 +50,29 @@ const Form = (props: FormikProps<FormikValues>) => {
         <Grid item xs={12}>
           <Field
             component={TextField}
+            name="artist"
+            label="Artist"
+            fullWidth
+            autoComplete="off"
+            required
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Field
+            component={TextField}
             name="description"
             label="Description"
+            fullWidth
+            autoComplete="off"
+            multiline
+            required
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Field
+            component={TextField}
+            name="coverurl"
+            label="Coverurl"
             fullWidth
             autoComplete="off"
             multiline
@@ -109,8 +130,13 @@ export default function PageProductForm() {
   const onSubmit = (values: FormikValues) => {
     const formattedValues = ProductSchema.cast(values);
     const productToSave = id ? {...ProductSchema.cast(formattedValues), id} : formattedValues;
-    axios.put(`${API_PATHS.bff}/product`, productToSave)
-      .then(() => history.push('/admin/products'));
+    console.log(productToSave);
+    try{
+      axios.post(`${API_PATHS.products}/products`, productToSave)
+      // .then(() => history.push('/admin/products'));
+    } catch(err) {
+      console.log(err)
+    }
   };
 
   useEffect(() => {
@@ -118,11 +144,11 @@ export default function PageProductForm() {
       setIsLoading(false);
       return;
     }
-    axios.get(`${API_PATHS.bff}/product/${id}`)
-      .then(res => {
-        setProduct(res.data);
-        setIsLoading(false);
-      });
+    // axios.get(`${API_PATHS.products}/products/${id}`)
+    //   .then(res => {
+    //     setProduct(res.data);
+    //     setIsLoading(false);
+    //   });
   }, [id])
 
   if (isLoading) return <p>loading...</p>;
